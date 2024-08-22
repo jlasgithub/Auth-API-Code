@@ -8,6 +8,7 @@ import java.net.URL;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import com.example.demo.domain.Token;
 import com.example.demo.util.JWTHelper;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/token")
 public class TokenAPI {
 
@@ -50,9 +52,7 @@ public class TokenAPI {
 	
 	private boolean checkPassword(String username, String password) {
 		// special case for application user
-		if(username.equals("ApiClientApp") && password.equals("secret")) {
-			return true;
-		}
+		
 		// make call to customer service 
 		Customer cust = getCustomerByNameFromCustomerAPI(username);
 		
@@ -84,10 +84,10 @@ public class TokenAPI {
 	}
 	
     private static Token createToken(String username) {
-    	String scopes = "com.example.demo.data.apis";
+    	String scopes = "com.example.demo.data.api";
     	// special case for application user
     	if( username.equalsIgnoreCase("ApiClientApp")) {
-    		scopes = "com.example.demo.auth.apis";
+    		scopes = "com.example.demo.auth.api";
     	}
     	String token_string = JWTHelper.createToken(scopes);
     	
